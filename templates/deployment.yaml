@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nginx-app.fullname" . }}-deployment
+  labels:
+    {{- include "nginx-app.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "nginx-app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "nginx-app.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          
+          volumeMounts:
+          - name: {{ .Values.configmap.volumeName }}
+            mountPath: {{ .Values.configmap.conf.path }}{{ .Values.configmap.conf.fileName }}
+            subPath: {{ .Values.configmap.conf.fileName }}
+
+          - name: {{ .Values.configmap.volumeName }}
+            mountPath: {{ .Values.configmap.index.path }}{{ .Values.configmap.index.fileName }}
+            subPath: {{ .Values.configmap.index.fileName }}
+
+          - name: {{ .Values.configmap.volumeName }}
+            mountPath: {{ .Values.configmap.secondPage.path }}{{ .Values.configmap.secondPage.fileName }}
+            subPath: {{ .Values.configmap.secondPage.fileName }}
+
+          - name: {{ .Values.configmap.volumeName }}
+            mountPath: {{ .Values.configmap.secondPage.path }}{{ .Values.configmap.secondPageStyle.fileName }}
+            subPath: {{ .Values.configmap.secondPageStyle.fileName }}
+
+          - name: {{ .Values.configmap.volumeName }}
+            mountPath: {{ .Values.configmap.music.path }}{{ .Values.configmap.music.fileName }}
+            subPath: {{ .Values.configmap.music.fileName }}
+      volumes:
+        - name: {{ .Values.configmap.volumeName }}
+          configMap:
+            name: {{ include "nginx-app.fullname" . }}-configmap
+  
