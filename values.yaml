@@ -20,7 +20,7 @@ service:
 ingress:
   enabled: true
   hosts:
-    - host: mynginx.com
+    - host: mynginx-site.com
       paths:
         - path: /
           pathType: Prefix
