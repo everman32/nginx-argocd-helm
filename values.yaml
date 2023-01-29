@@ -1,0 +1,44 @@
+# Default values for nginx-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+revisionHistoryLimit: 0
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+nameOverride: ""
+fullnameOverride: "nginx"
+
+service:
+  type: NodePort
+  port: 87
+
+ingress:
+  enabled: true
+  hosts:
+    - host: mynginx-site.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+configmap:
+  volumeName: "nginx-config"
+  conf:
+    path: "/etc/nginx/conf.d/"
+    fileName: "default.conf"
+  index:
+    path: "/var/www/html/"
+    fileName: "index.html"
+  secondPage:
+    path: "/var/www/html/another/"
+    fileName: "another.html"
+  secondPageStyle:
+    fileName: "style.css"
+  music:
+    path: "/var/www/music/"
+    fileName: "notify.mp3"
