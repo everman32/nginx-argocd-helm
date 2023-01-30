@@ -16,7 +16,7 @@ fullnameOverride: "nginx"
 
 service:
   type: NodePort
-  port: 87
+  port: 88
 
 ingress:
   enabled: true
