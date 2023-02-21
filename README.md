@@ -1,2 +1,2 @@
 # nginx-helm
-Helm chart for NGINX deployment with custom config to kubernetes cluster
+Helm charts for deploying NGINX and ArgoCD in a Kubernetes cluster
